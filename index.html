@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Interactive Analysis</title>
+		<noscript>
+			<style>
+				.js {
+					display: none;
+				}
+			</style>
+		</noscript>
+		<style>
+			@media print {
+				.interactive {
+					display: none;
+				}
+			}
+
+			/* Shared styles */
+			:root {
+				--font: sans-serif;
+			}
+
+			*, *::before, *::after {
+				box-sizing: border-box;
+			}
+
+			/* Light/default theme */
+			:root {
+				--background: white;
+				--foreground: black;
+			}
+
+			/* Dark theme */
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--background: black;
+					--foreground: white;
+				}
+			}
+
+			/* Styles */
+			:root {
+				background: var(--background);
+				color: var(--foreground);
+				font-family: var(--font);
+			}
+
+			h1, h2, h3, h4, h5, h6 {
+				font-weight: normal;
+			}
+
+			@media screen {
+				body {
+					max-width: min(8.5in, 100vw);
+					margin: 0 auto;
+					padding: 0 8px;
+				}
+			}
+
+			/* Table of contents */
+			body > header > nav {
+				counter-reset: toc;
+				& ol {
+					line-height: 1.5;
+					padding-left: 0.5em;
+					& > li {
+						padding-left: 1em;
+					}
+				}
+				& > ol > li {
+					margin-bottom: 2em;
+					&::marker {
+						content: counter(list-item);
+					}
+					& > ol > li {
+						counter-increment: toc;
+						&::marker {
+							content: counter(toc);
+						}
+					}
+					&.appendix {
+						margin-left: -1.5em;
+						&::marker {
+							content: "";
+						}
+					}
+				}
+			}
+
+			/* Main styles */
+			main {
+				counter-reset: chapter;
+				& > section.chapter {
+					counter-increment: chapter;
+					counter-reset: chapter-section;
+					& > header > h1::before {
+						content: counter(chapter) " ";
+					}
+					& > section {
+						counter-increment: chapter-section;
+						& > header > h2::before {
+							content: "§" counter(chapter) "." counter(chapter-section) " ";
+						}
+					}
+				}
+			}
+
+			/* Page styles */
+			[data-page]::after {
+				content: "p. " attr(data-page);
+				font-size: 1rem;
+				float: right;
+				vertical-align: top;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Paragraph text wraps to 100 columns in general -->
+		<header>
+			<h1>Interactive Analysis</h1>
+			<p><i>For a Calculus I audience</i></p>
+			<p>
+				This page is an interactive version of Kenneth A. Ross's
+				<em>excellent</em> book <i>Elementary Analysis</i>, which teaches
+				real analysis in a very concise and explainable fashion. Here, I
+				have created visualizations of many concepts presented in the book,
+				and aim to closely follow the actual book.
+			</p>
+			<p>
+				This page is primarily catered towards an audience who has
+				finished Calculus I. It will also occasionally feature snippets
+				that make connections to other parts of mathematics, as something
+				to look into for the curious reader.
+			</p>
+			<p><em>
+				P.S. Don't have the book?
+				<a href="https://honorsanalysis.math.gatech.edu/sites/default/files/documents/Ross_analysis.pdf">
+					You didn't find it here :)
+				</a>
+			</em></p>
+			<nav>
+				<h2>Table of contents</h2>
+				<ol>
+					<li>
+						<a href="#introduction">Introduction</a>
+						<ol>
+							<li><a href="#the-set-n-of-natural-numbers">The Set ℕ of Natural Numbers</a></li>
+							<li><a href="#the-set-q-of-rational-numbers">The Set ℚ of Rational Numbers</a></li>
+							<li>The Set ℝ of Real Numbers</li>
+							<li>The Completeness Axiom</li>
+							<li>The Symbols <math><mo>+</mo><mn>∞</mn></math> and <math><mo>-</mo><mn>∞</mn></math></li>
+							<li>* A Development of ℝ</li>
+						</ol>
+					</li>
+					<li>
+						Sequences
+						<ol>
+							<li>Limits of Sequences</li>
+							<li>A Discussion about Proofs</li>
+							<li>Limit Theorems for Sequences</li>
+							<li>Monotone Sequences and Cauchy Sequences</li>
+							<li>Subsequences</li>
+							<li>lim sup's and lim inf's</li>
+							<li>* Some Topological Concepts in Metric Spaces</li>
+							<li>Series</li>
+							<li>Alternating Series and Integral Tests</li>
+							<li>* Decimal Expansions of Real Numbers</li>
+						</ol>
+					</li>
+					<li>
+						Continuity
+						<ol>
+							<li>Continuous Functions</li>
+							<li>Properties of Continuous Functions</li>
+							<li>Uniform Continuity</li>
+							<li>Limits of Functions</li>
+							<li>* More on Metric Spaces: Continuity</li>
+							<li>* More on Metric Spaces: Connectedness</li>
+						</ol>
+					</li>
+					<li>
+						Sequences and Series of Functions
+						<ol>
+							<li>Power Series</li>
+							<li>Uniform Convergence</li>
+							<li>More on Uniform Convergence</li>
+							<li>Differentiation and Integration of Power Series</li>
+							<li>* Weierstrass's Approximation Theorem</li>
+						</ol>
+					</li>
+					<li>
+						Differentiation
+						<ol>
+							<li>Basic Properties of the Derivative</li>
+							<li>The Mean Value Theorem</li>
+							<li>* L'Hopital's Rule</li>
+							<li>Taylor's Theorem</li>
+						</ol>
+					</li>
+					<li>
+						Integration
+						<ol>
+							<li>The Riemann Integral</li>
+							<li>Properties of the Riemann Integral</li>
+							<li>Fundamental Theorem of Calculus</li>
+							<li>* Riemann-Stieltjes Integrals</li>
+							<li>* Improper Integrals</li>
+						</ol>
+					</li>
+					<li>
+						Capstone
+						<ol>
+							<li>* A Discussion of Exponents and Logarithms</li>
+							<li>* Continuous Nowhere-Differentiable Functions</li>
+						</ol>
+					</li>
+					<li class="appendix">Appendix on Set Notation</li>
+					<li class="appendix">Selected Hints and Answers</li>
+					<li class="appendix">A Guide to the References</li>
+					<li class="appendix">References</li>
+					<li class="appendix">Symbols Index</li>
+					<li class="appendix">Index</li>
+				</ol>
+			</nav>
+		</header>
+		<main>
+			<section class="chapter" id="introduction">
+				<header><h1 data-page="1">Introduction</h1></header>
+				<section id="the-set-n-of-natural-numbers">
+					<header><h2>The Set ℕ of Natural Numbers</h2></header>
+					<p>
+						The set below, of all <em>positive integers</em> is
+						denoted by ℕ (also known as the natural numbers):
+						<form class="js">
+							<input class="interactive" type="range" min="1" max="25" value="3" autocomplete="off" />
+							<script>
+								let me = document.currentScript;
+								me.parentElement.querySelector("input").addEventListener("input", function(e) {
+									let v = e.target.value;
+									let m = me.parentElement.parentElement.querySelector("math");
+									let h = "<mo>{</mo>";
+									for (let i = 1; i <= v; i++) {
+										h += `<mn>${i}</mn><mo>, </mo>`;
+									}
+									h += `<mi>...</mi><mo>}</mo>`;
+									m.innerHTML = h;
+								});
+							</script>
+						</form>
+						<math display="block">
+							<mo>{</mo>
+								<mn>1</mn>
+								<mo>, </mo>
+								<mn>2</mn>
+								<mo>, </mo>
+								<mn>3</mn>
+								<mo>, </mo>
+								<mi>...</mi>
+							<mo>}</mo>
+						</math>
+					</p>
+					<p>
+						Each positive integer (natural number)
+						<math><mi>n</mi></math> has a successor,
+						<math><mi>n</mi><mo>+</mo><mn>1</mn></math>.
+						The following axioms are known as the <em>Peano
+						Axioms</em> and they define the set of natural
+						numbers:
+					</p>
+					<style>
+						.peano-axioms {
+							& > li::marker {
+								content: "N" counter(list-item) ". ";
+								font-weight: bold;
+							}
+						}
+					</style>
+					<ol class="peano-axioms">
+						<li>1 belongs to ℕ.</li>
+						<li>
+							If <math><mi>n</mi></math> belongs to ℕ, then
+							its successor <math><mi>n</mi><mo>+</mo><mn>1</mn></math>
+							belongs to ℕ.
+						</li>
+						<li>1 is not the successor of any element in ℕ.</li>
+						<li data-page="2">
+							If <math><mi>n</mi></math> and <math><mi>m</mi></math>
+							in ℕ have the same successor, then
+							<math><mi>n</mi><mo>=</mo><mi>m</mi></math>.
+						</li>
+						<li>
+							A subset of ℕ which contains 1, and which
+							contains <math><mi>n</mi><mo>+</mo><mi>1</mi></math>
+							whenever it contains <math><mi>n</mi></math>,
+							must equal ℕ.
+						</li>
+					</ol>
+				</section>
+				<section id="the-set-q-of-rational-numbers">
+					<header><h2>The Set ℚ of Rational Numbers</h2></header>
+
+				</section>
+			</section>
+		</main>
+	</body>
+</html>
