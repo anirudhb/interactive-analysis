@@ -94,6 +94,7 @@
 			main {
 				counter-reset: chapter;
 				& > section.chapter {
+					break-before: right;
 					counter-increment: chapter;
 					counter-reset: chapter-section;
 					& > header > h1::before {
@@ -108,6 +109,20 @@
 				}
 			}
 
+			@media print {
+				.no-print {
+					display: none;
+				}
+				main > section.chapter {
+					padding-top: 33vh;
+					& > header > h1::before {
+						font-size: 2em;
+						margin-right: 1em;
+						border-right: 1px solid black;
+					}
+				}
+			}
+
 			/* Page styles */
 			[data-page]::after {
 				content: "p. " attr(data-page);
@@ -115,12 +130,27 @@
 				float: right;
 				vertical-align: top;
 			}
+
+			/* Chrome/WebKit hacks */
+			@supports (-webkit-font-smoothing: antialiased) {
+				math[display=block] {
+					margin-top: 0.5em;
+				}
+			}
 		</style>
 	</head>
 	<body>
 		<!-- Paragraph text wraps to 100 columns in general -->
 		<header>
 			<h1>Interactive Analysis</h1>
+			<noscript>
+				<p><em style="font-style: normal; font-weight: bold">
+					P.S. You have JS disabled! All interactivity will not show,
+					which kind of defeats the point. Most of the page should
+					still work, and I aim to keep it working. If something
+					is broken with JS disabled, please file an issue!
+				</em></p>
+			</noscript>
 			<p><i>For a Calculus I audience</i></p>
 			<p>
 				This page is an interactive version of Kenneth A. Ross's
@@ -135,7 +165,7 @@
 				that make connections to other parts of mathematics, as something
 				to look into for the curious reader.
 			</p>
-			<p><em>
+			<p class="no-print"><em>
 				P.S. Don't have the book?
 				<a href="https://honorsanalysis.math.gatech.edu/sites/default/files/documents/Ross_analysis.pdf">
 					You didn't find it here :)
@@ -236,28 +266,28 @@
 						denoted by ℕ (also known as the natural numbers):
 						<form class="js">
 							<input class="interactive" type="range" min="1" max="25" value="3" autocomplete="off" />
-							<script>
+							<script async>(function() {
 								let me = document.currentScript;
 								me.parentElement.querySelector("input").addEventListener("input", function(e) {
 									let v = e.target.value;
 									let m = me.parentElement.parentElement.querySelector("math");
 									let h = "<mo>{</mo>";
 									for (let i = 1; i <= v; i++) {
-										h += `<mn>${i}</mn><mo>, </mo>`;
+										h += `<mn>${i}</mn><mo>,</mo>`;
 									}
 									h += `<mi>...</mi><mo>}</mo>`;
 									m.innerHTML = h;
 								});
-							</script>
+							})();</script>
 						</form>
 						<math display="block">
 							<mo>{</mo>
 								<mn>1</mn>
-								<mo>, </mo>
+								<mo>,</mo>
 								<mn>2</mn>
-								<mo>, </mo>
+								<mo>,</mo>
 								<mn>3</mn>
-								<mo>, </mo>
+								<mo>,</mo>
 								<mi>...</mi>
 							<mo>}</mo>
 						</math>
@@ -271,11 +301,9 @@
 						numbers:
 					</p>
 					<style>
-						.peano-axioms {
-							& > li::marker {
-								content: "N" counter(list-item) ". ";
-								font-weight: bold;
-							}
+						ol.peano-axioms > li::marker {
+							content: "N" counter(list-item) ". ";
+							font-weight: bold;
 						}
 					</style>
 					<ol class="peano-axioms">
