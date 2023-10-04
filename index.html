@@ -138,6 +138,17 @@
 				}
 			}
 		</style>
+		<script async>
+			/* Common library definitions */
+			lib = {};
+			// https://stackoverflow.com/a/1527820
+			// min and max are inclusive
+			lib.randomInt = function(min, max) {
+				min = Math.ceil(min);
+				max = Math.floor(max);
+				return Math.floor(Math.random() * (max - min + 1)) + min;
+			};
+		</script>
 	</head>
 	<body>
 		<!-- Paragraph text wraps to 100 columns in general -->
@@ -328,7 +339,137 @@
 					</ol>
 				</section>
 				<section id="the-set-q-of-rational-numbers">
-					<header><h2>The Set ℚ of Rational Numbers</h2></header>
+					<header><h2 data-page="6">The Set ℚ of Rational Numbers</h2></header>
+					<p>
+						We expand the set of natural numbers to the set ℤ
+						of all integers, including zero and all negative
+						integers:
+						<form class="js">
+							<input class="interactive" type="range" min="1" max="10" value="2" autocomplete="off" />
+							<script async>(function () {
+								let me = document.currentScript;
+								me.parentElement.querySelector("input").addEventListener("input", function(e) {
+									let v = e.target.value;
+									let m = me.parentElement.parentElement.querySelector("math");
+									let h = "<mi>ℤ</mi><mo>=</mo><mo>{</mo><mn>0</mn><mo>,</mo>";
+									for (let i = 1; i <= v; i++) {
+										h += `<mn>${i}</mn><mo>,</mo><mn>-${i}</mn><mo>,</mo>`;
+									}
+									h += `<mi>...</mi><mo>}</mo>`;
+									m.innerHTML = h;
+								});
+							})();</script>
+						</form>
+						<math display="block">
+							<mi>ℤ</mi>
+							<mo>=</mo>
+							<mo>{</mo>
+								<mn>0</mn>
+								<mo>,</mo>
+								<mn>1</mn>
+								<mo>,</mo>
+								<mn>-1</mn>
+								<mo>,</mo>
+								<mn>2</mn>
+								<mo>,</mo>
+								<mn>-2</mn>
+								<mo>,</mo>
+								<mi>...</mi>
+							<mo>}</mo>
+						</math>
+					</p>
+					<p>
+						When division is introduced, ℤ becomes inadequate.
+						Hence, all fractions must be included as well,
+						leaving us with ℚ, containing all rational numbers
+						which are of the form <math>
+							<mfrac>
+								<mrow><mi>m</mi></mrow>
+								<mrow><mi>n</mi></mrow>
+							</mfrac>
+						</math> where <math><mi>m</mi><mo>,</mo><mi>n</mi><mo>∈</mo><mi>ℤ</mi></math>
+						and <math><mi>n</mi><mo>≠</mo><mn>0</mn></math>.
+					</p>
+					<p>
+						Many algebraic equations (typically polynomials)
+						can be solved for rational solutions, but what
+						about equations like <math>
+							<msup><mi>x</mi></mn>2</mn></msup>
+							<mo>=</mo>
+							<mn>2</mn>
+						</math>? Clearly, there are some gaps in ℚ.
+					</p>
+					<details class="interactive js">
+						<summary>Show me another example!</summary>
+						<form>
+							<math display="block"><mtext>Loading...</mtext></math>
+							<input type="button" value="Another one!" />
+							<script async>(function() {
+								let me = document.currentScript;
+								let m = me.parentElement.querySelector("math");
+								function doUntil(f, c) {
+									let out = f();
+									while (c(out)) out = f();
+									return out;
+								}
+								function findNonSquare(f) {
+									return doUntil(f, (x) => Math.sqrt(x) % 1 === 0);
+								}
+								function findCoprime(c, f) {
+									return doUntil(f, (x) => x % c === 0);
+								}
+								function doExample() {
+									let h = "";
+									let strategy = lib.randomInt(0, 2);
+									if (strategy === 0) {
+										// x^2 - a = 0 for non-square a
+										let root = findNonSquare(() => lib.randomInt(2, 99));
+										h += `<msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>${root}</mn><mo>=</mo><mn>0</mn>`;
+									} else if (strategy === 1) {
+										// (ax^2-b)(cx^2-d)(ex^2-f)(...) = 0
+										let numFactors = lib.randomInt(2, 5);
+										for (let i = 0; i < numFactors; i++) {
+											let a = findNonSquare(() => lib.randomInt(1, 99));
+											let b = findCoprime(a, () => findNonSquare(() => lib.randomInt(1, 99)));
+											h += `<mo>(</mo><mn>${a}</mn><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>${b}</mn><mo>)</mo>`;
+										}
+										h += `<mo>=</mo><mn>0</mn>`;
+									} else if (strategy === 2) {
+										// ax^2+bx+c = 0
+										// b^2-4ac has to be non-square and >0
+										let abc = doUntil(() => {
+											let a = lib.randomInt(1, 99);
+											let b = lib.randomInt(1, 99);
+											let c = lib.randomInt(1, 99);
+											return [a, b, c];
+										}, (abc) => {
+											let discrim = abc[1]*abc[1] - 4*abc[0]*abc[2];
+											return discrim <= 0 || Math.sqrt(discrim) % 1 === 0;
+										});
+										h += `<mn>${abc[0]}</mn><msup><mi>x</mi><mn>2</mn></msup>`;
+										h += `<mo>+</mo><mn>${abc[1]}</mn><mi>x</mi>`;
+										h += `<mo>+</mo><mn>${abc[2]}</mn><mo>=</mo><mn>0</mn>`;
+									}
+									m.innerHTML = h;
+								}
+								me.parentElement.querySelector("input").addEventListener("click", () => doExample());
+								doExample();
+							})();</script>
+						</form>
+					</details>
+					<p>
+						Further, there are numbers like <math><mi>e</mi></math>
+						and <math><mi>π</mi></math> that arise naturally
+						in math, yet are not rational numbers.
+					</p>
+					<p data-page="8">
+						To begin addressing this problem, we first start
+						by defining the <em>algebraic numbers</em>, all of
+						which satisfy a polynomial equation
+					</p>
+					<math display="block">
+						<msub></msub>
+					</math>
 				</section>
 			</section>
 		</main>
